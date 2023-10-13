@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     bigdecimal (3.1.4)
+    diff-lcs (1.5.0)
     nio4r (2.5.9)
     pg (1.5.4)
     puma (6.3.1)
@@ -13,6 +14,19 @@ GEM
     rackup (2.1.0)
       rack (>= 3)
       webrick (~> 1.8)
+    rspec (3.12.0)
+      rspec-core (~> 3.12.0)
+      rspec-expectations (~> 3.12.0)
+      rspec-mocks (~> 3.12.0)
+    rspec-core (3.12.2)
+      rspec-support (~> 3.12.0)
+    rspec-expectations (3.12.3)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.12.0)
+    rspec-mocks (3.12.6)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.12.0)
+    rspec-support (3.12.1)
     sequel (5.72.0)
       bigdecimal
     webrick (1.8.1)
@@ -24,6 +38,8 @@ DEPENDENCIES
   pg
   puma
   rack-app
+  rspec
+  rspec-expectations
   sequel
 
 BUNDLED WITH
