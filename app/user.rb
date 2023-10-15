@@ -1,4 +1,7 @@
 require 'json'
+require_relative 'validation/user_validator'
+require_relative 'validation/types/email'
+require_relative 'validation/types/zip_code'
 
 class User
   attr_reader :id, :first_name, :last_name, :patronymic, :sex, :address, :email, :zip_code, :created_at
@@ -13,8 +16,8 @@ class User
     @patronymic = raw_user.fetch(:patronymic)
     @sex = raw_user.fetch(:sex, false)
     @address = raw_user.fetch(:address)
-    @email = raw_user.fetch(:email)
-    @zip_code = raw_user.fetch(:zip_code)
+    @email = Email.new(raw_user.fetch(:email))
+    @zip_code = ZipCode.new(raw_user.fetch(:zip_code))
     @created_at = raw_user.fetch(:created_at, Time.now)
   end
 
@@ -26,9 +29,14 @@ class User
       patronymic: @patronymic,
       sex: @sex,
       address: @address,
-      email: @email,
-      zip_code: @zip_code,
+      email: @email.to_s,
+      zip_code: @zip_code.to_s,
       created_at: @created_at
     }.to_json
+  end
+
+  def validate
+    validator = UserValidator.new
+    validator.is_valid(self)
   end
 end

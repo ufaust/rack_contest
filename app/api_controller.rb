@@ -1,5 +1,6 @@
 require 'json'
 require_relative 'user'
+require_relative 'validation/exceptions/type_exception'
 
 class ApiController
 
@@ -34,7 +35,14 @@ class ApiController
 
     request = Rack::Request.new(env)
     params = JSON.parse(request.body.read).transform_keys(&:to_sym)
-    user = User.new(params)
+
+    begin
+      user = User.new(params)
+    rescue StandardError => error
+      if error.is_a?(TypeException)
+        return [400, { 'content-type' => 'application/json' }, [JSON.generate({:result => "true", :error => error.message})]]
+      end
+    end
 
     new_user = @db_connection[:users].insert(
       first_name: user.first_name,
@@ -42,12 +50,12 @@ class ApiController
       patronymic: user.patronymic,
       sex: user.sex,
       address: user.address,
-      email: user.email,
-      zip_code: user.zip_code,
+      email: user.email.to_s,
+      zip_code: user.zip_code.to_i,
       created_at: user.created_at
     )
 
-    [200, { 'content-type' => 'application/json' }, [JSON.generate({ :result => "true", :user_id => new_user.to_s })]]
+    [201, { 'content-type' => 'application/json' }, [JSON.generate({ :result => "true", :URL => "/user?id=#{new_user.to_s}"})]]
   end
 
   def list(env)

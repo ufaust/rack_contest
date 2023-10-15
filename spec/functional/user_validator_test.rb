@@ -20,8 +20,8 @@ class UserValidatorTest < Minitest::Test
                            :patronymic => 'test_patronymic',
                            :sex => true,
                            :address => 'test address 22222',
-                           :email => Email.new('test@email.com'),
-                           :zip_code => ZipCode.new(333333)
+                           :email => 'test@email.com',
+                           :zip_code => 333333
                          })
     assert(@validator.is_valid(test_user) == true)
   end
@@ -29,9 +29,7 @@ class UserValidatorTest < Minitest::Test
   def test_is_not_valid
     test_if_not_user = {}
     error_not_user = assert_raises(TypeException) { @validator.is_valid(test_if_not_user) }
-    assert_equal("Uncaught TypeException: must be of the type User, Hash given", error_not_user.message)
-    puts "<<<<"
-    puts Email.new('test@email.com').to_s
+    assert_equal("Uncaught TypeException: must be of the type User, Hash given, value {}", error_not_user.message)
 
     test_if_not_string = User.new({
                                     :first_name => 1,
@@ -43,20 +41,19 @@ class UserValidatorTest < Minitest::Test
                                     :zip_code => ZipCode.new(333333)
                                   })
     error_not_string = assert_raises(TypeException) { @validator.is_valid(test_if_not_string) }
-    assert_equal("Uncaught TypeException: must be of the type String, Integer given", error_not_string.message)
+    assert_equal("Uncaught TypeException: must be of the type String, Integer given, value 1", error_not_string.message)
 
-    test_if_not_integer = User.new({
-                                     :first_name => 'test_name',
-                                     :last_name => 'test_lastname',
-                                     :patronymic => 'test_patronymic',
-                                     :sex => true,
-                                     :address => 'test address 22222',
-                                     :email => Email.new('test@email.com'),
-                                     :zip_code => 333333
-                                   })
+    error_not_zipcode = assert_raises(TypeException) { @validator.is_valid(User.new({
+                                                                                      :first_name => 'test_name',
+                                                                                      :last_name => 'test_lastname',
+                                                                                      :patronymic => 'test_patronymic',
+                                                                                      :sex => true,
+                                                                                      :address => 'test address 22222',
+                                                                                      :email => 'test@email.com',
+                                                                                      :zip_code => 333
+                                                                                    })) }
 
-    error_not_integer = assert_raises(TypeException) { @validator.is_valid(test_if_not_integer) }
-    assert_equal("Uncaught TypeException: must be of the type ZipCode, Integer given", error_not_integer.message)
+    assert_equal("Uncaught TypeException: must be of the type ZipCode, Integer given, value 333", error_not_zipcode.message)
 
     test_if_not_boolean = User.new({
                                      :first_name => 'test_name',
@@ -64,12 +61,25 @@ class UserValidatorTest < Minitest::Test
                                      :patronymic => 'test_patronymic',
                                      :sex => 'string',
                                      :address => 'test address 22222',
-                                     :email => Email.new('test@email.com'),
+                                     :email => 'test@email.com',
                                      :zip_code => ZipCode.new(333333)
                                    })
 
     error_not_boolean = assert_raises(TypeException) { @validator.is_valid(test_if_not_boolean) }
-    assert_equal("Uncaught TypeException: must be of the type Boolean, String given", error_not_boolean.message)
+    assert_equal("Uncaught TypeException: must be of the type Boolean, String given, value string", error_not_boolean.message)
+
+
+    error_not_email = assert_raises(TypeException) { @validator.is_valid(User.new({
+                                                                                    :first_name => 'test_name',
+                                                                                    :last_name => 'test_lastname',
+                                                                                    :patronymic => 'test_patronymic',
+                                                                                    :sex => true,
+                                                                                    :address => 'test address 22222',
+                                                                                    :email => 'testemailcom',
+                                                                                    :zip_code => ZipCode.new(333333)
+                                                                                  })) }
+
+    assert_equal("Uncaught TypeException: must be of the type Email, String given, value testemailcom", error_not_email.message)
   end
 end
 

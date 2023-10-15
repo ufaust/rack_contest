@@ -22,7 +22,7 @@ class UserValidator
     USER_TYPES.each do |variable_name, type|
       if type.is_a?(TrueClass)
         self.validate_boolean(user_entity.send(variable_name))
-      elsif type.is_a?(ValidationType) and !(user_entity.send(variable_name).is_a?(type) and user_entity.send(variable_name).validate)
+      elsif type.is_a?(ValidationType) and !user_entity.send(variable_name).is_a?(type)
         raise TypeException.new(type, user_entity.send(variable_name))
       elsif !user_entity.send(variable_name).is_a?(type)
         raise TypeException.new(type, user_entity.send(variable_name))
