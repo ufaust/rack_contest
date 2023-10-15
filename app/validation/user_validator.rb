@@ -1,4 +1,7 @@
 require_relative 'exceptions/type_exception'
+require_relative 'types/validation_type'
+require_relative 'types/email'
+require_relative 'types/zip_code'
 
 class UserValidator
 
@@ -8,8 +11,8 @@ class UserValidator
     "patronymic" => String,
     "sex" => true,
     "address" => String,
-    "email" => String,
-    "zip_code" => Integer,
+    "email" => Email,
+    "zip_code" => ZipCode,
   }
 
   def is_valid(user_entity)
@@ -19,6 +22,8 @@ class UserValidator
     USER_TYPES.each do |variable_name, type|
       if type.is_a?(TrueClass)
         self.validate_boolean(user_entity.send(variable_name))
+      elsif type.is_a?(ValidationType) and !(user_entity.send(variable_name).is_a?(type) and user_entity.send(variable_name).validate)
+        raise TypeException.new(type, user_entity.send(variable_name))
       elsif !user_entity.send(variable_name).is_a?(type)
         raise TypeException.new(type, user_entity.send(variable_name))
       end
