@@ -15,7 +15,7 @@
 
 # Техническая информация
 
-##Сборка проекта:
+##Сборка проекта:  
 `docker-compose build`   
 `docker-compose up -d`
 `docker exec -it rack_contest_app_1 sh`
