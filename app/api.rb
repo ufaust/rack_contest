@@ -23,7 +23,6 @@ end
 api_controller = ApiController.new(DB)
 # configure default routes
 not_found_handler = ->(env) { [404, {}, ["Route not exist, send GET to /help to check available routes"]] }
-help_handler = ->(env) {[200, {'Content-Type' => 'application/json'},["/help - list of all routes", "/user - get user object by ID", "/user/new - make new user", "/list - get all users in collection"]]}
 
 # define router
 app_router = Router.new

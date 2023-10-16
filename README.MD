@@ -13,4 +13,14 @@
 - [x] Опционально можно оформить приложение в Docker или Docker Compose контейнер.
 
 
-run tests `rspec spec/functional/user_validator_test.rb` 
+# Техническая информация
+
+##Сборка проекта:
+`docker-compose build`   
+`docker-compose up -d`
+`docker exec -it rack_contest_app_1 sh`
+`bundler install`
+
+## Запуск тестов:
+`rspec spec/functional/user_validator_test.rb` 
+
